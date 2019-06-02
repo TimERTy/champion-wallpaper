@@ -4,4 +4,4 @@ jobs:
     build:
         working_directory: ~/repos/champion-wallpaper
         docker:
-            - image: circleci/node:10
+        - image: circleci/node:10
