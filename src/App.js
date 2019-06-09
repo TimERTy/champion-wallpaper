@@ -57,10 +57,10 @@ function fetchJson(url) {
 function getAccountId(summonerName) {
     //Gets the api based off of the summoner name provided
     let url = "https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+summonerName+"?api_key=RGAPI-4691fa9f-f6fd-4a58-9d55-69050f28aaad";
-    var promise = new Promise(fetchJson(url))
-    .then((data) => {
-        return data.accountId;
-    });
+    //var promise = new Promise(fetchJson(url))
+    //.then((data) => {
+    //    return data.accountId;
+    //});
 }
 
 function getChampion() {
