@@ -1,0 +1,33 @@
+.MatchView {
+    background-color: crimson;
+    display: grid;
+    grid-template-columns: 25% 25% auto 25%;
+    grid-template-areas: "MatchView-championIcon MatchView-champion MatchView-KDA MatchView-stats";
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.MatchView[win="Win"] {
+    background-color: rgb(182, 226, 176);
+}
+
+.MatchView-champion {
+}
+
+.MatchView-KDA {
+    text-align: left;
+}
+.MatchView-KDA-kills {
+}
+.MatchView-KDA-deaths {
+}
+.MatchView-KDA-assists {
+}
+.MatchView-stats {
+}
+.MatchView-stats-level {
+}
+.MatchView-stats-cs {
+}
+.MatchView-championIcon {
+}

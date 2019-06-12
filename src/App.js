@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import MatchView from "./MatchView";
 
 class App extends React.Component {
     constructor() {
@@ -10,7 +11,7 @@ class App extends React.Component {
             summonerName: "",
             accountId: "",
             matches: [],
-            matchesCollection: {},
+            matchCollection: [],
             champName: "",
             champNum: 0,
             getChampion: 0,
@@ -38,19 +39,31 @@ class App extends React.Component {
             .then(res => res.json())
             .then(data => {
                 let team = -1;
+                let participantId = -1;
                 for (let identity = 0; identity < 10; identity++) {
                     if (data.participantIdentities[identity].player.summonerName === this.state.summonerName) {
                         team = Math.floor((data.participantIdentities[identity].participantId - 1) / 5);
-                        //console.log("Participant ID: ", data.participantIdentities[identity].participantId);
+                        participantId = data.participantIdentities[identity].participantId;
                     }
                 }
-                //console.log(team);
-                this.setState(prevState => ({
-                    matchesCollection: {
-                        ...prevState.matchesCollection,
-                        [matchId]: data.teams[team].win
-                    }
-                }));
+                //console.log("deaths: ", data.participants[participantId]["stats"]["deaths"]);
+                this.setState({
+                    matchCollection: [
+                        ...this.state.matchCollection,
+                        {
+                            queueId: data.queueId,
+                            win: data.teams[team].win,
+                            champion: data.participants[participantId]["championId"],
+                            championName: "",
+                            kills: data.participants[participantId]["stats"]["kills"],
+                            deaths: data.participants[participantId]["stats"]["deaths"],
+                            assists: data.participants[participantId]["stats"]["assists"],
+                            level: data.participants[participantId]["stats"]["champLevel"],
+                            cs: data.participants[participantId]["stats"]["totalMinionsKilled"],
+                            multikill: data.participants[participantId]["stats"]["largestMultiKill"]
+                        }
+                    ]
+                });
             });
     }
 
@@ -59,31 +72,34 @@ class App extends React.Component {
         for (let index = 0; index < 10; index++) {
             this.getMatch(this.state.matches[index].gameId);
         }
-        //console.log(matchesCollection);
-        //setTimeout(() => console.log(matchesCollection), 3000);
+        //console.log(matchCollection);
+        //setTimeout(() => console.log(matchCollection), 3000);
     }
 
-    getChampName() {
+    getChampName(champNum) {
         //this function will
-        fetch("/api/champName/" + this.state.champNum)
+        fetch("/api/champName/" + champNum)
             .then(res => res.json())
             .then(data => {
-                this.setState({ champName: data.champName });
+                //this.setState({ champName: data.champName });
+                return data.champName;
             });
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.getChampion) {
             if (prevState.summonerName !== this.state.summonerName) {
+                this.setState({ matchCollection: [] });
                 this.getAccountId();
             } else if (prevState.accountId !== this.state.accountId) {
                 this.getMatchHistory();
             } else if (prevState.champName !== this.state.champName) {
                 //hooray
             } else if (prevState.champNum !== this.state.champNum) {
-                this.getChampName();
+                //this.getChampName(this.state.champNum);
             } else if (prevState.matches !== this.state.matches) {
                 //TODO open display match data nicely
+                this.getMatches();
             } else if (prevState.showMatches !== this.state.showMatches) {
                 if (this.state.showMatches === 1) this.getMatches();
             }
@@ -94,7 +110,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
+                    {!this.state.showMatches ? <img src={logo} className="App-logo" alt="logo" /> : ""}
                     <h1>Project Home</h1>
                     <input
                         className="App-input"
@@ -141,8 +157,20 @@ class App extends React.Component {
                     ) : (
                         <div className="App-matches">
                             {/* display matches */}
-                            {Object.keys(this.state.matchesCollection).map(item => {
-                                return <div>{this.state.matchesCollection[item]}</div>;
+                            {Object.keys(this.state.matchCollection).map(item => {
+                                return (
+                                    <MatchView
+                                        win={this.state.matchCollection[item].win}
+                                        champion={this.state.matchCollection[item].champion}
+                                        kills={this.state.matchCollection[item].kills}
+                                        deaths={this.state.matchCollection[item].deaths}
+                                        assists={this.state.matchCollection[item].assists}
+                                        level={this.state.matchCollection[item].level}
+                                        cs={this.state.matchCollection[item].cs}
+                                        championIcon="Temp"
+                                        multikill={this.state.matchCollection[item].multikill}
+                                    />
+                                );
                             })}
                         </div>
                     )}
