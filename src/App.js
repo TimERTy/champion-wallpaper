@@ -12,9 +12,7 @@ class App extends React.Component {
             accountId: "",
             matches: [],
             matchCollection: [],
-            champName: "",
-            champNum: 0,
-            getChampion: 0,
+            getSummonerData: 0,
             showMatches: 0
         };
     }
@@ -23,14 +21,14 @@ class App extends React.Component {
         //Gets the api based off of the summoner name provided
         fetch("/api/accountId/" + this.state.summonerName)
             .then(res => res.json())
-            .then(data => this.setState({ accountId: data.accountId }));
+            .then(data => this.setState({ accountId: data.accountId }, this.getMatchHistory()));
     }
 
     getMatchHistory() {
         //this function will
         fetch("/api/matchHistory/" + this.state.accountId)
             .then(res => res.json())
-            .then(data => this.setState({ matches: data, champNum: data[0].champion }));
+            .then(data => this.setState({ matches: data, champNum: data[0].champion }, this.getMatches()));
     }
 
     getMatch(matchId) {
@@ -68,12 +66,9 @@ class App extends React.Component {
     }
 
     getMatches() {
-        //console.log(Object.keys(this.state.matches));
         for (let index = 0; index < 10; index++) {
             this.getMatch(this.state.matches[index].gameId);
         }
-        //console.log(matchCollection);
-        //setTimeout(() => console.log(matchCollection), 3000);
     }
 
     getChampName(champNum) {
@@ -81,29 +76,8 @@ class App extends React.Component {
         fetch("/api/champName/" + champNum)
             .then(res => res.json())
             .then(data => {
-                //this.setState({ champName: data.champName });
                 return data.champName;
             });
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.getChampion) {
-            if (prevState.summonerName !== this.state.summonerName) {
-                this.setState({ matchCollection: [] });
-                this.getAccountId();
-            } else if (prevState.accountId !== this.state.accountId) {
-                this.getMatchHistory();
-            } else if (prevState.champName !== this.state.champName) {
-                //hooray
-            } else if (prevState.champNum !== this.state.champNum) {
-                //this.getChampName(this.state.champNum);
-            } else if (prevState.matches !== this.state.matches) {
-                //TODO open display match data nicely
-                this.getMatches();
-            } else if (prevState.showMatches !== this.state.showMatches) {
-                if (this.state.showMatches === 1) this.getMatches();
-            }
-        }
     }
 
     render() {
@@ -132,10 +106,14 @@ class App extends React.Component {
                         }}
                         onKeyDown={e => {
                             if (e.key === "Enter") {
-                                this.setState({
-                                    getChampion: 1,
-                                    summonerName: this.state.text
-                                });
+                                this.setState(
+                                    {
+                                        summonerName: this.state.text,
+                                        matchCollection: [],
+                                        matches: []
+                                    },
+                                    this.getAccountId()
+                                );
                             }
                         }}
                     />
@@ -143,6 +121,7 @@ class App extends React.Component {
                         className="App-matches-button"
                         onClick={e => {
                             this.setState({ showMatches: this.state.showMatches ^ 1 });
+                            if (this.state.showMatches === 1) this.getMatches();
                         }}
                     >
                         Button
@@ -152,7 +131,6 @@ class App extends React.Component {
                             <p>{this.state.accountId ? this.state.accountId : "No Account ID"}</p>
                             <p>{this.state.summonerName ? this.state.summonerName : "No Summoner Name"}</p>
                             <p>{this.state.matches[0] ? this.state.matches[0].champion : "No Matches"}</p>
-                            <p>{this.state.champName ? this.state.champName : "No Champion Name"}</p>
                         </div>
                     ) : (
                         <div className="App-matches">
