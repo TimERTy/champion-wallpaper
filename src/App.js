@@ -1,18 +1,19 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import MatchView from "./MatchView";
+
+const MatchView = lazy(() => import("./MatchView"));
 
 class App extends React.Component {
     constructor() {
         super();
         this.state = {
+            title: "My API Parser (LoL)",
             text: "Summoner Name",
             summonerName: "",
             accountId: "",
             matches: [],
             matchCollection: [],
-            getSummonerData: 0,
             showMatches: 0
         };
     }
@@ -21,14 +22,14 @@ class App extends React.Component {
         //Gets the api based off of the summoner name provided
         fetch("/api/accountId/" + this.state.summonerName)
             .then(res => res.json())
-            .then(data => this.setState({ accountId: data.accountId }, this.getMatchHistory()));
+            .then(data => this.setState({ accountId: data.accountId }, () => this.getMatchHistory()));
     }
 
     getMatchHistory() {
         //this function will
         fetch("/api/matchHistory/" + this.state.accountId)
             .then(res => res.json())
-            .then(data => this.setState({ matches: data, champNum: data[0].champion }, this.getMatches()));
+            .then(data => this.setState({ matches: data, champNum: data[0].champion }, () => this.getMatches()));
     }
 
     getMatch(matchId) {
@@ -51,14 +52,15 @@ class App extends React.Component {
                         {
                             queueId: data.queueId,
                             win: data.teams[team].win,
-                            champion: data.participants[participantId]["championId"],
+                            champion: data.participants[participantId - 1]["championId"],
                             championName: "",
-                            kills: data.participants[participantId]["stats"]["kills"],
-                            deaths: data.participants[participantId]["stats"]["deaths"],
-                            assists: data.participants[participantId]["stats"]["assists"],
-                            level: data.participants[participantId]["stats"]["champLevel"],
-                            cs: data.participants[participantId]["stats"]["totalMinionsKilled"],
-                            multikill: data.participants[participantId]["stats"]["largestMultiKill"]
+                            kills: data.participants[participantId - 1]["stats"]["kills"],
+                            deaths: data.participants[participantId - 1]["stats"]["deaths"],
+                            assists: data.participants[participantId - 1]["stats"]["assists"],
+                            level: data.participants[participantId - 1]["stats"]["champLevel"],
+                            cs: data.participants[participantId - 1]["stats"]["totalMinionsKilled"],
+                            multikill: data.participants[participantId - 1]["stats"]["largestMultiKill"],
+                            timestamp: data.gameCreation
                         }
                     ]
                 });
@@ -66,9 +68,11 @@ class App extends React.Component {
     }
 
     getMatches() {
-        for (let index = 0; index < 10; index++) {
-            this.getMatch(this.state.matches[index].gameId);
-        }
+        this.setState({ matchCollection: [] }, () => {
+            for (let index = 0; index < 10; index++) {
+                this.getMatch(this.state.matches[index].gameId);
+            }
+        });
     }
 
     getChampName(champNum) {
@@ -76,16 +80,17 @@ class App extends React.Component {
         fetch("/api/champName/" + champNum)
             .then(res => res.json())
             .then(data => {
-                return data.champName;
+                return data.champions;
             });
     }
 
     render() {
+        let that = this;
         return (
             <div className="App">
                 <header className="App-header">
                     {!this.state.showMatches ? <img src={logo} className="App-logo" alt="logo" /> : ""}
-                    <h1>Project Home</h1>
+                    <h1>{this.state.title}</h1>
                     <input
                         className="App-input"
                         type="text"
@@ -112,7 +117,7 @@ class App extends React.Component {
                                         matchCollection: [],
                                         matches: []
                                     },
-                                    this.getAccountId()
+                                    () => this.getAccountId()
                                 );
                             }
                         }}
@@ -120,8 +125,9 @@ class App extends React.Component {
                     <button
                         className="App-matches-button"
                         onClick={e => {
-                            this.setState({ showMatches: this.state.showMatches ^ 1 });
-                            if (this.state.showMatches === 1) this.getMatches();
+                            this.setState({ showMatches: this.state.showMatches ^ 1 }, () => {
+                                if (this.state.showMatches === 1) this.getMatches();
+                            });
                         }}
                     >
                         Button
@@ -135,21 +141,30 @@ class App extends React.Component {
                     ) : (
                         <div className="App-matches">
                             {/* display matches */}
-                            {Object.keys(this.state.matchCollection).map(item => {
-                                return (
-                                    <MatchView
-                                        win={this.state.matchCollection[item].win}
-                                        champion={this.state.matchCollection[item].champion}
-                                        kills={this.state.matchCollection[item].kills}
-                                        deaths={this.state.matchCollection[item].deaths}
-                                        assists={this.state.matchCollection[item].assists}
-                                        level={this.state.matchCollection[item].level}
-                                        cs={this.state.matchCollection[item].cs}
-                                        championIcon="Temp"
-                                        multikill={this.state.matchCollection[item].multikill}
-                                    />
-                                );
-                            })}
+                            <Suspense fallback={<div>Loading...</div>}>
+                                {Object.keys(this.state.matchCollection)
+                                    .sort(function(a, b) {
+                                        return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
+                                    })
+                                    .map(item => {
+                                        return (
+                                            <React.Fragment>
+                                                <MatchView
+                                                    win={that.state.matchCollection[item].win}
+                                                    champion={that.state.matchCollection[item].champion}
+                                                    kills={that.state.matchCollection[item].kills}
+                                                    deaths={that.state.matchCollection[item].deaths}
+                                                    assists={that.state.matchCollection[item].assists}
+                                                    level={that.state.matchCollection[item].level}
+                                                    cs={that.state.matchCollection[item].cs}
+                                                    championIcon="Temp"
+                                                    multikill={that.state.matchCollection[item].multikill}
+                                                    timestamp={that.state.matchCollection[item].timestamp}
+                                                />
+                                            </React.Fragment>
+                                        );
+                                    })}
+                            </Suspense>
                         </div>
                     )}
                 </header>
