@@ -20,11 +20,6 @@ class App extends React.Component {
         };
     }
 
-    //temp debuging
-    componentDidMount() {
-        this.setState({ summonerName: "TimERTy", text: "TimERTy" }, () => this.getAccountId());
-    }
-
     getAccountId() {
         //Gets the api based off of the summoner name provided
         fetch("http://localhost:5555/api/accountId/" + this.state.summonerName)
