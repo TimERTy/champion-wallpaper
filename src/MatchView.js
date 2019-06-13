@@ -12,7 +12,7 @@ class MatchView extends React.Component {
     }
 
     componentDidMount() {
-        fetch("/api/champName/" + this.props.champion)
+        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/champName/" + this.props.champion)
             .then(res => res.json())
             .then(data => {
                 this.setState({ champName: data.champions[this.props.champion] });
