@@ -22,21 +22,21 @@ class App extends React.Component {
 
     getAccountId() {
         //Gets the api based off of the summoner name provided
-        fetch("http://localhost:5555/api/accountId/" + this.state.summonerName)
+        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/accountId/" + this.state.summonerName)
             .then(res => res.json())
             .then(data => this.setState({ accountId: data.accountId }, () => this.getMatchHistory()));
     }
 
     getMatchHistory() {
         //this function will
-        fetch("http://localhost:5555/api/matchHistory/" + this.state.accountId)
+        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/matchHistory/" + this.state.accountId)
             .then(res => res.json())
             .then(data => this.setState({ matches: data, champNum: data[0].champion }, () => this.getMatches()));
     }
 
     getMatch(matchId) {
         //this function will
-        fetch("http://localhost:5555/api/match/" + matchId)
+        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/match/" + matchId)
             .then(res => res.json())
             .then(data => {
                 let team = -1;
@@ -79,7 +79,7 @@ class App extends React.Component {
 
     getChampName(champNum) {
         //this function will
-        fetch("http://localhost:5555/api/champName/" + champNum)
+        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/champName/" + champNum)
             .then(res => res.json())
             .then(data => {
                 return data.champions;
