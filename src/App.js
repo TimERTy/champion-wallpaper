@@ -15,7 +15,7 @@ class App extends React.Component {
             accountId: "",
             matches: [],
             matchCollection: [],
-            showMatches: 1,
+            showMatches: 0,
             numMatches: 10
         };
     }
