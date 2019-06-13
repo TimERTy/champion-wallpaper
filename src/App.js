@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
+import Loading from "./Loading";
 const MatchView = lazy(() => import("./MatchView"));
 
 class App extends React.Component {
@@ -14,8 +15,14 @@ class App extends React.Component {
             accountId: "",
             matches: [],
             matchCollection: [],
-            showMatches: 0
+            showMatches: 1,
+            numMatches: 10
         };
+    }
+
+    //temp debuging
+    componentDidMount() {
+        this.setState({ summonerName: "TimERTy", text: "TimERTy" }, () => this.getAccountId());
     }
 
     getAccountId() {
@@ -69,7 +76,7 @@ class App extends React.Component {
 
     getMatches() {
         this.setState({ matchCollection: [] }, () => {
-            for (let index = 0; index < 10; index++) {
+            for (let index = 0; index < this.state.numMatches; index++) {
                 this.getMatch(this.state.matches[index].gameId);
             }
         });
@@ -119,19 +126,20 @@ class App extends React.Component {
                                     },
                                     () => this.getAccountId()
                                 );
+                                if (!this.state.showMatches) this.setState({ showMatches: 1 });
                             }
                         }}
                     />
-                    <button
-                        className="App-matches-button"
-                        onClick={e => {
-                            this.setState({ showMatches: this.state.showMatches ^ 1 }, () => {
-                                if (this.state.showMatches === 1) this.getMatches();
-                            });
-                        }}
-                    >
-                        Button
-                    </button>
+                    <span className="App-matches-button-span">
+                        <button
+                            className="App-matches-button"
+                            onClick={e => {
+                                this.setState({ showMatches: this.state.showMatches ^ 1 });
+                            }}
+                        >
+                            {this.state.showMatches ? "Hide Matches" : "Show Matches"}
+                        </button>
+                    </span>
                     {!this.state.showMatches ? (
                         <div className="App-details">
                             <p>{this.state.accountId ? this.state.accountId : "No Account ID"}</p>
@@ -141,30 +149,29 @@ class App extends React.Component {
                     ) : (
                         <div className="App-matches">
                             {/* display matches */}
-                            <Suspense fallback={<div>Loading...</div>}>
-                                {Object.keys(this.state.matchCollection)
-                                    .sort(function(a, b) {
-                                        return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
-                                    })
-                                    .map(item => {
-                                        return (
-                                            <React.Fragment>
-                                                <MatchView
-                                                    win={that.state.matchCollection[item].win}
-                                                    champion={that.state.matchCollection[item].champion}
-                                                    kills={that.state.matchCollection[item].kills}
-                                                    deaths={that.state.matchCollection[item].deaths}
-                                                    assists={that.state.matchCollection[item].assists}
-                                                    level={that.state.matchCollection[item].level}
-                                                    cs={that.state.matchCollection[item].cs}
-                                                    championIcon="Temp"
-                                                    multikill={that.state.matchCollection[item].multikill}
-                                                    timestamp={that.state.matchCollection[item].timestamp}
-                                                />
-                                            </React.Fragment>
-                                        );
-                                    })}
-                            </Suspense>
+                            {this.state.matchCollection.length >= this.state.numMatches ? "" : <Loading />}
+                            {Object.keys(this.state.matchCollection)
+                                .sort(function(a, b) {
+                                    return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
+                                })
+                                .map(item => {
+                                    return (
+                                        <Suspense fallback={<div>Loading...</div>}>
+                                            <MatchView
+                                                win={that.state.matchCollection[item].win}
+                                                champion={that.state.matchCollection[item].champion}
+                                                kills={that.state.matchCollection[item].kills}
+                                                deaths={that.state.matchCollection[item].deaths}
+                                                assists={that.state.matchCollection[item].assists}
+                                                level={that.state.matchCollection[item].level}
+                                                cs={that.state.matchCollection[item].cs}
+                                                championIcon="Temp"
+                                                multikill={that.state.matchCollection[item].multikill}
+                                                timestamp={that.state.matchCollection[item].timestamp}
+                                            />
+                                        </Suspense>
+                                    );
+                                })}
                         </div>
                     )}
                 </header>

@@ -1,12 +1,17 @@
 .MatchView {
     background-color: lightcoral;
     display: grid;
-    grid-template-columns: 25% 25% auto 25%;
-    grid-template-areas: "MatchView-championIcon MatchView-champion MatchView-KDA MatchView-stats";
-    padding: 10px;
+    grid-template-columns: 5% 10% 20% auto 20%;
+    grid-template-areas: "MatchView-win MatchView-championIcon MatchView-champion MatchView-KDA MatchView-stats";
+    padding-left: 1vw;
+    padding-right: 1vw;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
     box-sizing: border-box;
     font-size: 20px;
+    vertical-align: middle;
     color: rgb(82, 82, 82);
+    min-height: calc(13vh + 1px);
 }
 
 .MatchView[win="Win"] {
@@ -18,22 +23,41 @@
     padding-bottom: 5px;
 }
 
+.MatchView-win {
+    grid-area: MatchView-win;
+}
+
 .MatchView-champion {
+    grid-area: MatchView-champion;
 }
 
 .MatchView-KDA {
+    grid-area: MatchView-KDA;
+
     display: grid;
+    grid-template-rows: 50% auto;
     grid-template-columns: 33% 33% auto;
-    grid-template-areas: "MatchView-KDA-kills MatchView-KDA-deaths MatchView-KDA-assists";
+    grid-template-areas:
+        "MatchView-KDA-kda MatchView-KDA-kda MatchView-KDA-kda"
+        "MatchView-KDA-kills MatchView-KDA-deaths MatchView-KDA-assists";
     padding: 10px;
 }
+
+.MatchView-KDA-kda {
+    grid-area: MatchView-KDA-kda;
+    padding-bottom: 30px;
+}
 .MatchView-KDA-kills {
+    grid-area: MatchView-KDA-kills;
 }
 .MatchView-KDA-deaths {
+    grid-area: MatchView-KDA-deaths;
 }
 .MatchView-KDA-assists {
+    grid-area: MatchView-KDA-assists;
 }
 .MatchView-stats {
+    grid-area: MatchView-stats;
 }
 .MatchView-stats-level {
 }

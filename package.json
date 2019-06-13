@@ -13,7 +13,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "test:coverage:ci": "react-scripts test --watchAll --coverage --maxWorkers 2",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "deploy": "aws s3 sync build/ s3://timertyexpressbucket --acl public-read"
     },
     "eslintConfig": {
         "extends": "react-app"
@@ -30,5 +31,5 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://localhost:5000"
+    "proxy": "http://localhost:55555"
 }

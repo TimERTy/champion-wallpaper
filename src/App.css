@@ -19,6 +19,10 @@
     color: white;
 }
 
+.App-input {
+    text-align: center;
+}
+
 .App-link {
     color: #61dafb;
 }
@@ -27,6 +31,15 @@
     width: 50%;
     align-items: center;
     padding: 10px;
+    overflow-y: auto;
+    height: 67vh;
+}
+
+.App-matches-button {
+}
+
+.App-matches-button-span {
+    height: 45px;
 }
 
 @keyframes App-logo-spin {
