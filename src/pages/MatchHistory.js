@@ -90,86 +90,84 @@ class MatchHistory extends React.Component {
         let that = this;
         return (
             <div className="MatchHistory">
-                <header className="MatchHistory-header">
-                    {!this.state.showMatches ? <img src={logo} className="MatchHistory-logo" alt="logo" /> : ""}
-                    <h1>{this.state.title}</h1>
-                    <input
-                        className="MatchHistory-input"
-                        type="text"
-                        id="text"
-                        value={this.state.text}
-                        onChange={e => {
-                            let regex = new RegExp("^[0-9a-zA-Z _.]+$");
-                            if (regex.test(e.key)) {
-                                //League of Legends Api
-                                //  This function uses lol dev api to figure out the last played champion played by the user
-                                //  The User will input thier IGN (in game name) which will then trigger an api search
-                                this.setState({
-                                    text: e.target.value
-                                });
-                            } else {
-                                console.log("bad");
-                            }
+                {!this.state.showMatches ? <img src={logo} className="MatchHistory-logo" alt="logo" /> : ""}
+                <h1>{this.state.title}</h1>
+                <input
+                    className="MatchHistory-input"
+                    type="text"
+                    id="text"
+                    value={this.state.text}
+                    onChange={e => {
+                        let regex = new RegExp("^[0-9a-zA-Z _.]+$");
+                        if (regex.test(e.key)) {
+                            //League of Legends Api
+                            //  This function uses lol dev api to figure out the last played champion played by the user
+                            //  The User will input thier IGN (in game name) which will then trigger an api search
+                            this.setState({
+                                text: e.target.value
+                            });
+                        } else {
+                            console.log("bad");
+                        }
+                    }}
+                    onKeyDown={e => {
+                        if (e.key === "Enter") {
+                            this.setState(
+                                {
+                                    summonerName: this.state.text,
+                                    matchCollection: [],
+                                    matches: []
+                                },
+                                () => this.getAccountId()
+                            );
+                            if (!this.state.showMatches) this.setState({ showMatches: 1 });
+                        }
+                    }}
+                />
+                <span className="MatchHistory-matches-button-span">
+                    <button
+                        className="MatchHistory-matches-button"
+                        onClick={e => {
+                            this.setState({ showMatches: this.state.showMatches ^ 1 });
                         }}
-                        onKeyDown={e => {
-                            if (e.key === "Enter") {
-                                this.setState(
-                                    {
-                                        summonerName: this.state.text,
-                                        matchCollection: [],
-                                        matches: []
-                                    },
-                                    () => this.getAccountId()
+                    >
+                        {this.state.showMatches ? "Hide Matches" : "Show Matches"}
+                    </button>
+                </span>
+                {!this.state.showMatches ? (
+                    <div className="MatchHistory-details">
+                        <p>{this.state.accountId ? this.state.accountId : "No Account ID"}</p>
+                        <p>{this.state.summonerName ? this.state.summonerName : "No Summoner Name"}</p>
+                        <p>{this.state.matches[0] ? this.state.matches[0].champion : "No Matches"}</p>
+                    </div>
+                ) : (
+                    <div className="MatchHistory-matches">
+                        {/* display matches */}
+                        {this.state.matchCollection.length >= this.state.numMatches ? "" : <Loading />}
+                        {Object.keys(this.state.matchCollection)
+                            .sort(function(a, b) {
+                                return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
+                            })
+                            .map(item => {
+                                return (
+                                    <Suspense fallback={<div>Loading...</div>}>
+                                        <MatchView
+                                            win={that.state.matchCollection[item].win}
+                                            champion={that.state.matchCollection[item].champion}
+                                            kills={that.state.matchCollection[item].kills}
+                                            deaths={that.state.matchCollection[item].deaths}
+                                            assists={that.state.matchCollection[item].assists}
+                                            level={that.state.matchCollection[item].level}
+                                            cs={that.state.matchCollection[item].cs}
+                                            championIcon="Temp"
+                                            multikill={that.state.matchCollection[item].multikill}
+                                            timestamp={that.state.matchCollection[item].timestamp}
+                                        />
+                                    </Suspense>
                                 );
-                                if (!this.state.showMatches) this.setState({ showMatches: 1 });
-                            }
-                        }}
-                    />
-                    <span className="MatchHistory-matches-button-span">
-                        <button
-                            className="MatchHistory-matches-button"
-                            onClick={e => {
-                                this.setState({ showMatches: this.state.showMatches ^ 1 });
-                            }}
-                        >
-                            {this.state.showMatches ? "Hide Matches" : "Show Matches"}
-                        </button>
-                    </span>
-                    {!this.state.showMatches ? (
-                        <div className="MatchHistory-details">
-                            <p>{this.state.accountId ? this.state.accountId : "No Account ID"}</p>
-                            <p>{this.state.summonerName ? this.state.summonerName : "No Summoner Name"}</p>
-                            <p>{this.state.matches[0] ? this.state.matches[0].champion : "No Matches"}</p>
-                        </div>
-                    ) : (
-                        <div className="MatchHistory-matches">
-                            {/* display matches */}
-                            {this.state.matchCollection.length >= this.state.numMatches ? "" : <Loading />}
-                            {Object.keys(this.state.matchCollection)
-                                .sort(function(a, b) {
-                                    return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
-                                })
-                                .map(item => {
-                                    return (
-                                        <Suspense fallback={<div>Loading...</div>}>
-                                            <MatchView
-                                                win={that.state.matchCollection[item].win}
-                                                champion={that.state.matchCollection[item].champion}
-                                                kills={that.state.matchCollection[item].kills}
-                                                deaths={that.state.matchCollection[item].deaths}
-                                                assists={that.state.matchCollection[item].assists}
-                                                level={that.state.matchCollection[item].level}
-                                                cs={that.state.matchCollection[item].cs}
-                                                championIcon="Temp"
-                                                multikill={that.state.matchCollection[item].multikill}
-                                                timestamp={that.state.matchCollection[item].timestamp}
-                                            />
-                                        </Suspense>
-                                    );
-                                })}
-                        </div>
-                    )}
-                </header>
+                            })}
+                    </div>
+                )}
             </div>
         );
     }

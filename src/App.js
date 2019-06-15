@@ -44,6 +44,7 @@ class App extends React.Component {
                         OtherPage
                     </button>
                 </div>
+                <div className="App-Warning">This site is currently under construction.</div>
                 <Suspense fallback={<Loading />}>
                     {/* This is the page switcher */}
                     {this.state.page === "Home" ? <Home /> : ""}
