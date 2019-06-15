@@ -12,6 +12,7 @@
     vertical-align: middle;
     color: rgb(82, 82, 82);
     min-height: calc(13vh + 1px);
+    min-width: 600px;
 }
 
 .MatchView[win="Win"] {

@@ -28,10 +28,11 @@
 }
 
 .MatchHistory-matches {
-    width: 50%;
+    min-width: 600px;
     align-items: center;
-    padding: 10px;
+    padding: calc(1vw + 10px);
     overflow-y: auto;
+    overflow-x: hidden;
     height: 67vh;
 }
 
