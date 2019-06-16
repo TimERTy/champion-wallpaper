@@ -18,39 +18,40 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <div className="App-Buttons">
-                    <button
-                        className="App-Button-Home"
-                        onClick={() => {
-                            this.setState({ page: "Home" });
-                        }}
-                    >
-                        Home
-                    </button>
-                    <button
-                        className="App-Button-MatchHistory"
-                        onClick={() => {
-                            this.setState({ page: "MatchHistory" });
-                        }}
-                    >
-                        MatchHistory
-                    </button>
-                    <button
-                        className="App-Button-Page"
-                        onClick={() => {
-                            this.setState({ page: "Page" });
-                        }}
-                    >
-                        OtherPage
-                    </button>
-                </div>
-                <div className="App-Warning">This site is currently under construction.</div>
-                <Suspense fallback={<Loading />}>
-                    {/* This is the page switcher */}
-                    {this.state.page === "Home" ? <Home /> : ""}
-                    {this.state.page === "MatchHistory" ? <MatchHistory /> : ""}
-                    {this.state.page === "Page" ? <Page /> : ""}
-                </Suspense>
+                <header className="App-header">
+                    <div className="App-Buttons">
+                        <button
+                            className="App-Button-Home"
+                            onClick={() => {
+                                this.setState({ page: "Home" });
+                            }}
+                        >
+                            Home
+                        </button>
+                        <button
+                            className="App-Button-MatchHistory"
+                            onClick={() => {
+                                this.setState({ page: "MatchHistory" });
+                            }}
+                        >
+                            MatchHistory
+                        </button>
+                        <button
+                            className="App-Button-Page"
+                            onClick={() => {
+                                this.setState({ page: "Page" });
+                            }}
+                        >
+                            OtherPage
+                        </button>
+                    </div>
+                    <Suspense fallback={<Loading />}>
+                        {/* This is the page switcher */}
+                        {this.state.page === "Home" ? <Home /> : ""}
+                        {this.state.page === "MatchHistory" ? <MatchHistory /> : ""}
+                        {this.state.page === "Page" ? <Page /> : ""}
+                    </Suspense>
+                </header>
             </div>
         );
     }
