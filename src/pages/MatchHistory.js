@@ -24,7 +24,7 @@ class MatchHistory extends React.Component {
         //Gets the api based off of the summoner name provided
         fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/accountId/" + this.state.summonerName)
             .then(res => res.json())
-            .then(data => this.setState({ accountId: data.accountId }, () => this.getMatchHistory()));
+            .then(data => this.setState({ accountId: data.accountId, summonerName: data.name }, () => this.getMatchHistory()));
     }
 
     getMatchHistory() {
