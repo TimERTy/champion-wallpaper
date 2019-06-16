@@ -124,16 +124,7 @@ class MatchHistory extends React.Component {
                         }
                     }}
                 />
-                <span className="MatchHistory-matches-button-span">
-                    <button
-                        className="MatchHistory-matches-button"
-                        onClick={e => {
-                            this.setState({ showMatches: this.state.showMatches ^ 1 });
-                        }}
-                    >
-                        {this.state.showMatches ? "Hide Matches" : "Show Matches"}
-                    </button>
-                </span>
+                <span className="MatchHistory-matches-above-span" />
                 {!this.state.showMatches ? (
                     <div className="MatchHistory-details">
                         <p>{this.state.accountId ? this.state.accountId : "No Account ID"}</p>

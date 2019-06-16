@@ -24,16 +24,25 @@ class MatchView extends React.Component {
             <span className="MatchView-span">
                 <div className="MatchView" win={this.props.win}>
                     <div className="MatchView-win">{this.props.win === "Win" ? "Win" : "Loss"}</div>
-                    <div className="MatchView-championIcon">{this.props.championIcon}</div>
+                    <div className="MatchView-championIcon">
+                        <img
+                            src={
+                                "http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/champTile/" +
+                                this.state.champName
+                            }
+                            alt="new"
+                        />
+                    </div>
                     <div className="MatchView-champion">{this.state.champName}</div>
                     <div className="MatchView-KDA">
                         <div className="MatchView-KDA-kda">
-                            (K + A) / D: {Math.round(((this.props.kills + this.props.assists) / this.props.deaths) * 100) / 100}
+                            KDA: {Math.round(((this.props.kills + this.props.assists) / this.props.deaths) * 100) / 100}
                         </div>
                         <div className="MatchView-KDA-kills">K: {this.props.kills}</div>
                         <div className="MatchView-KDA-deaths">D: {this.props.deaths}</div>
                         <div className="MatchView-KDA-assists">A: {this.props.assists}</div>
                     </div>
+                    <div className="MatchView-build">Build will be here</div>
                     <div className="MatchView-stats">
                         <div className="MatchView-stats-level">Level: {this.props.level}</div>
                         <div className="MatchView-stats-cs">CS: {this.props.cs}</div>

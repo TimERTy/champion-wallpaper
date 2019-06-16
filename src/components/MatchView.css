@@ -1,16 +1,14 @@
 .MatchView {
     background-color: lightcoral;
     display: grid;
-    grid-template-columns: 5% 10% 20% auto 20%;
-    grid-template-areas: "MatchView-win MatchView-championIcon MatchView-champion MatchView-KDA MatchView-stats";
-    padding-left: 1vw;
-    padding-right: 1vw;
+    grid-template-columns: 10% 10vh 20% auto 30% 10%;
+    grid-template-areas: "MatchView-win MatchView-championIcon MatchView-champion MatchView-KDA MatchView-build MatchView-stats";
     padding-top: 1vh;
     padding-bottom: 1vh;
     box-sizing: border-box;
     font-size: 20px;
     vertical-align: middle;
-    color: rgb(82, 82, 82);
+    color: #282c34;
     min-height: calc(13vh + 1px);
     min-width: 600px;
 }
@@ -26,6 +24,13 @@
 
 .MatchView-win {
     grid-area: MatchView-win;
+}
+
+.MatchView-championIcon > img {
+    height: 9vh;
+    width: 9vh;
+    background-color: #61dafb;
+    padding: 0.5vh;
 }
 
 .MatchView-champion {
@@ -57,12 +62,15 @@
 .MatchView-KDA-assists {
     grid-area: MatchView-KDA-assists;
 }
+
+.MatchView-build {
+    grid-area: MatchView-build;
+}
+
 .MatchView-stats {
     grid-area: MatchView-stats;
 }
 .MatchView-stats-level {
 }
 .MatchView-stats-cs {
-}
-.MatchView-championIcon {
 }

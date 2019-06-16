@@ -28,16 +28,14 @@
     min-width: 66vw;
     align-items: center;
     padding: calc(1vw + 10px);
+    padding-top: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 60vh;
+    max-height: 65vh;
 }
 
-.MatchHistory-matches-button {
-}
-
-.MatchHistory-matches-button-span {
-    height: 45px;
+.MatchHistory-matches-above-span {
+    height: 3vh;
 }
 
 @keyframes MatchHistory-logo-spin {
