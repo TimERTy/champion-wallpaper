@@ -1,6 +1,5 @@
 import React from "react";
-import logo from "../logo.svg";
-import "./Home.css";
+//import "./Home.css";
 
 class Home extends React.Component {
     constructor() {
@@ -9,11 +8,7 @@ class Home extends React.Component {
     }
 
     render() {
-        return (
-            <div className="Home">
-                <img src={logo} className="Home-logo" alt="logo" />
-            </div>
-        );
+        return <div className="Home" />;
     }
 }
 

@@ -1,9 +1,19 @@
 import React, { Suspense, lazy } from "react";
-import logo from "../logo.svg";
-import "./MatchHistory.css";
+//import "./MatchHistory.css";
 
+import { TextField, Container, Typography } from "@material-ui/core";
 import Loading from "../components/Loading";
 const MatchView = lazy(() => import("../components/MatchView"));
+const styles = {
+    matchHistory: {
+        alignContent: "centre",
+        alignItems: "centre"
+    },
+    matches: {
+        height: "60vh",
+        overflowY: "auto"
+    }
+};
 
 class MatchHistory extends React.Component {
     constructor() {
@@ -86,80 +96,85 @@ class MatchHistory extends React.Component {
             });
     }
 
+    handleChange = () => event => {
+        const regex = new RegExp("^[0-9a-zA-Z _.]+$");
+        if (regex.test(event.key)) {
+            //League of Legends Api
+            //  This function uses lol dev api to figure out the last played champion played by the user
+            //  The User will input thier IGN (in game name) which will then trigger an api search
+            this.setState({
+                text: event.target.value
+            });
+        } else {
+            console.log("bad");
+        }
+    };
+
+    handleKeyDown = () => event => {
+        if (event.key === "Enter") {
+            this.setState(
+                {
+                    summonerName: this.state.text,
+                    matchCollection: [],
+                    matches: []
+                },
+                () => this.getAccountId()
+            );
+            if (!this.state.showMatches) this.setState({ showMatches: 1 });
+        }
+    };
+
     render() {
         let that = this;
         return (
-            <div className="MatchHistory">
-                {!this.state.showMatches ? <img src={logo} className="MatchHistory-logo" alt="logo" /> : ""}
+            <Typography component="div" style={styles.matchHistory}>
                 <h1>{this.state.title}</h1>
-                <input
+                <TextField
                     className="MatchHistory-input"
-                    type="text"
-                    id="text"
-                    value={this.state.text}
-                    onChange={e => {
-                        let regex = new RegExp("^[0-9a-zA-Z _.]+$");
-                        if (regex.test(e.key)) {
-                            //League of Legends Api
-                            //  This function uses lol dev api to figure out the last played champion played by the user
-                            //  The User will input thier IGN (in game name) which will then trigger an api search
-                            this.setState({
-                                text: e.target.value
-                            });
-                        } else {
-                            console.log("bad");
-                        }
-                    }}
-                    onKeyDown={e => {
-                        if (e.key === "Enter") {
-                            this.setState(
-                                {
-                                    summonerName: this.state.text,
-                                    matchCollection: [],
-                                    matches: []
-                                },
-                                () => this.getAccountId()
-                            );
-                            if (!this.state.showMatches) this.setState({ showMatches: 1 });
-                        }
-                    }}
+                    id="standard-search"
+                    label="Summoner Name"
+                    type="search"
+                    margin="normal"
+                    width="200"
+                    onChange={this.handleChange("text")}
+                    onKeyDown={this.handleKeyDown()}
                 />
-                <span className="MatchHistory-matches-above-span" />
                 {!this.state.showMatches ? (
-                    <div className="MatchHistory-details">
+                    <div className="MatchHistory-details" style={styles.matchHistory}>
                         <p>{this.state.accountId ? this.state.accountId : "No Account ID"}</p>
                         <p>{this.state.summonerName ? this.state.summonerName : "No Summoner Name"}</p>
                         <p>{this.state.matches[0] ? this.state.matches[0].champion : "No Matches"}</p>
                     </div>
                 ) : (
-                    <div className="MatchHistory-matches">
-                        {/* display matches */}
-                        {this.state.matchCollection.length >= this.state.numMatches ? "" : <Loading />}
-                        {Object.keys(this.state.matchCollection)
-                            .sort(function(a, b) {
-                                return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
-                            })
-                            .map(item => {
-                                return (
-                                    <Suspense fallback={<div>Loading...</div>}>
-                                        <MatchView
-                                            win={that.state.matchCollection[item].win}
-                                            champion={that.state.matchCollection[item].champion}
-                                            kills={that.state.matchCollection[item].kills}
-                                            deaths={that.state.matchCollection[item].deaths}
-                                            assists={that.state.matchCollection[item].assists}
-                                            level={that.state.matchCollection[item].level}
-                                            cs={that.state.matchCollection[item].cs}
-                                            championIcon="Temp"
-                                            multikill={that.state.matchCollection[item].multikill}
-                                            timestamp={that.state.matchCollection[item].timestamp}
-                                        />
-                                    </Suspense>
-                                );
-                            })}
-                    </div>
+                    <Container className="MatchHistory-matches" fixed>
+                        <Typography component="div" style={styles.matches}>
+                            {/* display matches */}
+                            {this.state.matchCollection.length >= this.state.numMatches ? "" : <Loading />}
+                            {Object.keys(this.state.matchCollection)
+                                .sort(function(a, b) {
+                                    return that.state.matchCollection[b].timestamp - that.state.matchCollection[a].timestamp;
+                                })
+                                .map(item => {
+                                    return (
+                                        <Suspense fallback={<div>Loading...</div>}>
+                                            <MatchView
+                                                win={that.state.matchCollection[item].win}
+                                                champion={that.state.matchCollection[item].champion}
+                                                kills={that.state.matchCollection[item].kills}
+                                                deaths={that.state.matchCollection[item].deaths}
+                                                assists={that.state.matchCollection[item].assists}
+                                                level={that.state.matchCollection[item].level}
+                                                cs={that.state.matchCollection[item].cs}
+                                                multikill={that.state.matchCollection[item].multikill}
+                                                timestamp={that.state.matchCollection[item].timestamp}
+                                            />
+                                        </Suspense>
+                                    );
+                                })}
+                        </Typography>
+                    </Container>
                 )}
-            </div>
+            </Typography>
         );
     }
 }

@@ -1,9 +1,7 @@
 .LoadingScreen {
     max-height: min(100%, 100vh);
     max-width: min(100%, 100vw);
-    background-color: #282c34;
     font-size: calc(10px + 2vmin);
-    color: white;
     padding-block-start: 15vh;
     padding-block-end: 50vh;
 }

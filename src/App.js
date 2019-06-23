@@ -1,11 +1,24 @@
 import React, { Suspense, lazy } from "react";
-import logo from "./logo.svg";
-import "./App.css";
 
-import Loading from "./components/Loading";
+import { Loading, Header, Footer } from "./components";
+import { Button, ButtonGroup, Container, Typography, CssBaseline } from "@material-ui/core";
+
 const Home = lazy(() => import("./pages/Home"));
 const Page = lazy(() => import("./pages/Page"));
 const MatchHistory = lazy(() => import("./pages/MatchHistory"));
+const styles = {
+    root: {
+        minHeight: "100vh"
+    },
+    main: {
+        alignContent: "center",
+        alignItems: "center"
+    },
+    match: {
+        color: "white",
+        backgroundColor: "black"
+    }
+};
 
 class App extends React.Component {
     constructor() {
@@ -17,41 +30,41 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <div className="App-Buttons">
-                        <button
-                            className="App-Button-Home"
-                            onClick={() => {
-                                this.setState({ page: "Home" });
-                            }}
-                        >
-                            Home
-                        </button>
-                        <button
-                            className="App-Button-MatchHistory"
-                            onClick={() => {
-                                this.setState({ page: "MatchHistory" });
-                            }}
-                        >
-                            MatchHistory
-                        </button>
-                        <button
-                            className="App-Button-Page"
-                            onClick={() => {
-                                this.setState({ page: "Page" });
-                            }}
-                        >
-                            OtherPage
-                        </button>
-                    </div>
+            <div style={styles.root}>
+                <CssBaseline />
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+                <Header />
+                <ButtonGroup size="large" fullWidth color="primary" aria-label="Full width outlined button group">
+                    <Button
+                        onClick={() => {
+                            this.setState({ page: "Home" });
+                        }}
+                    >
+                        Home
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.setState({ page: "MatchHistory" });
+                        }}
+                    >
+                        MatchHistory
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.setState({ page: "Page" });
+                        }}
+                    >
+                        OtherPage
+                    </Button>
+                </ButtonGroup>
+                <Container fixed component="main" style={styles.main}>
                     <Suspense fallback={<Loading />}>
-                        {/* This is the page switcher */}
                         {this.state.page === "Home" ? <Home /> : ""}
                         {this.state.page === "MatchHistory" ? <MatchHistory /> : ""}
                         {this.state.page === "Page" ? <Page /> : ""}
                     </Suspense>
-                </header>
+                </Container>
+                <Footer />
             </div>
         );
     }
