@@ -5,9 +5,12 @@ import "./MatchHistory.css";
 import Loading from "../components/Loading";
 const MatchView = lazy(() => import("../components/MatchView"));
 
+const host = "http://localhost";
+const port = 5555;
+
 class MatchHistory extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             title: "My API Parser (LoL)",
             text: "Summoner Name",
@@ -20,34 +23,39 @@ class MatchHistory extends React.Component {
         };
     }
 
-    getAccountId() {
+    async getAccountId() {
         //Gets the api based off of the summoner name provided
-        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/accountId/" + this.state.summonerName)
+        await fetch(host + ":" + port + "/api/accountId/" + this.state.summonerName)
             .then(res => res.json())
-            .then(data => this.setState({ accountId: data.accountId, summonerName: data.name }, () => this.getMatchHistory()));
+            .then(data => {
+                console.log(data);
+                this.setState({ accountId: data.accountId, summonerName: data.name }, () => this.getMatchHistory());
+            });
     }
 
-    getMatchHistory() {
+    async getMatchHistory() {
         //this function will
-        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/matchHistory/" + this.state.accountId)
+        await fetch(host + ":" + port + "/api/matchHistory/" + this.state.accountId)
             .then(res => res.json())
             .then(data => this.setState({ matches: data, champNum: data[0].champion }, () => this.getMatches()));
     }
 
-    getMatch(matchId) {
+    async getMatch(matchId) {
         //this function will
-        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/match/" + matchId)
+        await fetch(host + ":" + port + "/api/match/" + matchId)
             .then(res => res.json())
             .then(data => {
                 let team = -1;
                 let participantId = -1;
                 for (let identity = 0; identity < 10; identity++) {
+                    console.log(data.participantIdentities[identity].player.summonerName, this.state.summonerName);
                     if (data.participantIdentities[identity].player.summonerName === this.state.summonerName) {
                         team = Math.floor((data.participantIdentities[identity].participantId - 1) / 5);
                         participantId = data.participantIdentities[identity].participantId;
                     }
                 }
                 //console.log("deaths: ", data.participants[participantId]["stats"]["deaths"]);
+                if (team === -1) console.log("The team has not been found.");
                 this.setState({
                     matchCollection: [
                         ...this.state.matchCollection,
@@ -77,9 +85,9 @@ class MatchHistory extends React.Component {
         });
     }
 
-    getChampName(champNum) {
+    async getChampName(champNum) {
         //this function will
-        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/champName/" + champNum)
+        await fetch(host + ":" + port + "/api/champName/" + champNum)
             .then(res => res.json())
             .then(data => {
                 return data.champions;

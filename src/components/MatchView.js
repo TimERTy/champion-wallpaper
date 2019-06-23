@@ -1,6 +1,9 @@
 import React from "react";
 import "./MatchView.css";
 
+const host = "http://localhost";
+const port = 5555;
+
 class MatchView extends React.Component {
     //TODO: add summoners, items, masteries
     //TODO: add other players in match
@@ -11,8 +14,8 @@ class MatchView extends React.Component {
         };
     }
 
-    componentDidMount() {
-        fetch("http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/champName/" + this.props.champion)
+    async componentDidMount() {
+        await fetch(host + ":" + port + "/api/champName/" + this.props.champion)
             .then(res => res.json())
             .then(data => {
                 this.setState({ champName: data.champions[this.props.champion] });
@@ -26,10 +29,7 @@ class MatchView extends React.Component {
                     <div className="MatchView-win">{this.props.win === "Win" ? "Win" : "Loss"}</div>
                     <div className="MatchView-championIcon">
                         <img
-                            src={
-                                "http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com:5555/api/champTile/" +
-                                this.state.champName
-                            }
+                            src={this.state.champName ? "" : host + ":" + port + "/api/champTile/" + this.state.champName}
                             alt="new"
                         />
                     </div>
