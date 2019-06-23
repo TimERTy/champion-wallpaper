@@ -10,7 +10,8 @@ class MatchView extends React.Component {
     constructor() {
         super();
         this.state = {
-            champName: ""
+            champName: "",
+            imageLocation: ""
         };
     }
 
@@ -18,7 +19,10 @@ class MatchView extends React.Component {
         await fetch(host + ":" + port + "/api/champName/" + this.props.champion)
             .then(res => res.json())
             .then(data => {
-                this.setState({ champName: data.champName });
+                this.setState({
+                    champName: data.champName,
+                    imageLocation: host + ":" + port + "/api/champTile/" + data.champName
+                });
             });
     }
 
@@ -28,7 +32,7 @@ class MatchView extends React.Component {
                 <div className="MatchView" win={this.props.win}>
                     <div className="MatchView-win">{this.props.win === "Win" ? "Win" : "Loss"}</div>
                     <div className="MatchView-championIcon">
-                        <img src={host + ":" + port + "/api/champTile/" + this.state.champName} alt="Image Missing" />
+                        <img src={this.state.imageLocation} alt="ImageMissing" />
                     </div>
                     <div className="MatchView-champion">{this.state.champName}</div>
                     <div className="MatchView-KDA">
