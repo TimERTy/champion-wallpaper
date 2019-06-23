@@ -1,7 +1,7 @@
 import React from "react";
 import "./MatchView.css";
 
-const host = "http://localhost";
+const host = "http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com";
 const port = 5555;
 
 class MatchView extends React.Component {
@@ -18,7 +18,7 @@ class MatchView extends React.Component {
         await fetch(host + ":" + port + "/api/champName/" + this.props.champion)
             .then(res => res.json())
             .then(data => {
-                this.setState({ champName: data.champions[this.props.champion] });
+                this.setState({ champName: data.champName });
             });
     }
 
@@ -28,10 +28,7 @@ class MatchView extends React.Component {
                 <div className="MatchView" win={this.props.win}>
                     <div className="MatchView-win">{this.props.win === "Win" ? "Win" : "Loss"}</div>
                     <div className="MatchView-championIcon">
-                        <img
-                            src={this.state.champName ? "" : host + ":" + port + "/api/champTile/" + this.state.champName}
-                            alt="new"
-                        />
+                        <img src={host + ":" + port + "/api/champTile/" + this.state.champName} alt="Image Missing" />
                     </div>
                     <div className="MatchView-champion">{this.state.champName}</div>
                     <div className="MatchView-KDA">

@@ -5,7 +5,7 @@ import "./MatchHistory.css";
 import Loading from "../components/Loading";
 const MatchView = lazy(() => import("../components/MatchView"));
 
-const host = "http://localhost";
+const host = "http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com";
 const port = 5555;
 
 class MatchHistory extends React.Component {
