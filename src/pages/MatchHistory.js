@@ -1,5 +1,4 @@
 import React, { Suspense, lazy } from "react";
-import logo from "../logo.svg";
 import "./MatchHistory.css";
 
 import Loading from "../components/Loading";
@@ -98,7 +97,6 @@ class MatchHistory extends React.Component {
         let that = this;
         return (
             <div className="MatchHistory">
-                {!this.state.showMatches ? <img src={logo} className="MatchHistory-logo" alt="logo" /> : ""}
                 <h1>{this.state.title}</h1>
                 <input
                     className="MatchHistory-input"
@@ -110,7 +108,7 @@ class MatchHistory extends React.Component {
                         if (regex.test(e.key)) {
                             //League of Legends Api
                             //  This function uses lol dev api to figure out the last played champion played by the user
-                            //  The User will input thier IGN (in game name) which will then trigger an api search
+                            //  The User will input their IGN (in game name) which will then trigger an api search
                             this.setState({
                                 text: e.target.value
                             });
