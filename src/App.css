@@ -4,27 +4,38 @@
     height: 100vh;
     align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
+    font-size: 1.5rem;
     color: white;
 }
 
-.App-Header {
-    text-align: center;
+.App-header {
     background-color: #282c34;
-    font-size: calc(10px + 2vmin);
     color: white;
+    align-items: center;
+    height: 4rem;
 }
 
-.App-Buttons > button {
+.App-Buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 80%;
+    height: 100%;
+    margin: auto;
+}
+
+.App-Buttons > a {
     background-color: #61dafb;
-    border: none;
     color: #282c34;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: inherit;
+    padding: 1.1rem;
+    border: none;
     text-align: center;
     font-size: 16px;
     margin: 4px 2px;
-    cursor: pointer;
     width: 15vmin;
-    height: 5vh;
 }
 
 .App-logo {
