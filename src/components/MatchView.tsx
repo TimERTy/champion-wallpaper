@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "./MatchView.css";
-
-const host = "http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com";
-const port = 5555;
+import { API_URL } from "../Constants";
 
 export interface IMatchViewProps {
 	queueId?: string;
@@ -21,13 +19,11 @@ export interface IMatchViewProps {
 
 const MatchView: React.FC<IMatchViewProps> = ( { champion, kills, deaths, assists, level, cs, championIcon, win } ) => {
 	const [ champName, setChampName ] = useState( "" );
-	const [ imageLocation, setImageLocation ] = useState( "" );
 
-	fetch( host + ":" + port + "/api/champName/" + champion )
+	fetch( API_HOST + "/api/champName/" + champion )
 		.then( res => res.json() )
 		.then( data => {
 			setChampName( data.champName );
-			setImageLocation( host + ":" + port + "/api/champTile/" + data.champName );
 		} );
 
 	return (

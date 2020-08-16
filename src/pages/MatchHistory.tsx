@@ -4,9 +4,7 @@ import Loading from "../components/Loading";
 import MatchView, { IMatchViewProps } from "../components/MatchView";
 import logo from "../logo.svg";
 import "./MatchHistory.css";
-
-const host = "http://ec2-54-206-45-161.ap-southeast-2.compute.amazonaws.com";
-const port = 5555;
+import { API_URL } from "../Constants";
 
 interface MatchHistoryState {
 	title: string;
@@ -37,7 +35,7 @@ class MatchHistory extends React.Component<Readonly<{ }>, MatchHistoryState> {
 
 	async getAccountId () {
 		// Gets the api based off of the summoner name provided
-		await fetch( host + ":" + port + "/api/accountId/" + this.state.summonerName )
+		await fetch( API_URL + "/api/accountId/" + this.state.summonerName )
 			.then( res => res.json() )
 			.then( data => {
 				console.log( data );
@@ -47,14 +45,14 @@ class MatchHistory extends React.Component<Readonly<{ }>, MatchHistoryState> {
 
 	async getMatchHistory () {
 		// this function will
-		await fetch( host + ":" + port + "/api/matchHistory/" + this.state.accountId )
+		await fetch( API_URL + "/api/matchHistory/" + this.state.accountId )
 			.then( res => res.json() )
 			.then( data => this.setState( { matches: data, champNum: data[ 0 ].champion }, () => this.getMatches() ) );
 	}
 
 	async getMatch ( matchId: string ) {
 		// this function will
-		await fetch( host + ":" + port + "/api/match/" + matchId )
+		await fetch( API_URL + "/api/match/" + matchId )
 			.then( res => res.json() )
 			.then( ( data ) => {
 				let team = -1;
@@ -100,7 +98,7 @@ class MatchHistory extends React.Component<Readonly<{ }>, MatchHistoryState> {
 
 	async getChampName ( champNum: string ) {
 		// this function will
-		await fetch( host + ":" + port + "/api/champName/" + champNum )
+		await fetch( API_URL + "/api/champName/" + champNum )
 			.then( res => res.json() )
 			.then( data => {
 				return data.champions;

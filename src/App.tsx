@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
 import "./App.css";
-import logo from "./logo.svg";
 import { Home, MatchHistory, Page } from "./pages";
 
 const App: React.FC = () => {
