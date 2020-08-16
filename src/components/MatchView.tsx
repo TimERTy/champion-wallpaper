@@ -20,7 +20,7 @@ export interface IMatchViewProps {
 const MatchView: React.FC<IMatchViewProps> = ( { champion, kills, deaths, assists, level, cs, championIcon, win } ) => {
 	const [ champName, setChampName ] = useState( "" );
 
-	fetch( API_HOST + "/api/champName/" + champion )
+	fetch( API_URL + "/api/champName/" + champion )
 		.then( res => res.json() )
 		.then( data => {
 			setChampName( data.champName );
