@@ -1,0 +1,81 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "linterOptions": {
+    "exclude": [
+      "config/**/*.js",
+      "node_modules/**/*.ts",
+      "coverage/lcov-report/*.js"
+    ]
+  },
+  "rules": {
+    "no-console": false,
+    "max-classes-per-file": false,
+    "no-empty": false,
+    "no-string-literal": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": true,
+    "semicolon": true,
+    "trailing-comma": [
+      true,
+      {
+        "singleline": "never",
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "functions": "never",
+          "typeLiterals": "always"
+        }
+      }
+    ],
+    "indent": [
+      true,
+      "tabs",
+      4
+    ],
+    "jsx-boolean-value": false,
+    "no-trailing-whitespace": true,
+    "jsx-alignment": true,
+    "no-namespace": false,
+    "variable-name": false,
+    "prefer-const": true,
+    "jsx-self-close": true,
+    "jsx-space-before-trailing-slash": true,
+    "jsx-wrap-multiline": true,
+    "jsx-no-lambda": false,
+    "callable-types": false,
+    "member-ordering": true,
+    "space-within-parens": [
+      true,
+      1
+    ],
+    "import-spacing": true,
+    "space-before-function-paren": true,
+    "typedef-whitespace": true,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-rest-spread",
+      "check-type",
+      "check-typecast",
+      "check-type-operator",
+      "check-preblock",
+      "check-postbrace"
+    ],
+    "jsx-curly-spacing": [
+      true,
+      "always"
+    ],
+    "one-variable-per-declaration": false,
+    "jsx-key": false,
+    "no-empty-interface": false,
+    "no-irregular-whitespace": true
+  }
+}
